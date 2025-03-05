@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="helpdesk_order_tree_view">
+        <field name="name">HelpDesk Tree View</field>
+        <field name="model">helpdesk.order</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="partner_id" optional="show"/>
+                <field name="email" optional="show"/>
+                <field name="categories" optional="show"/>
+                <field name="sub_categories" optional="show"/>
+                <field name="project" optional="show"/>
+                <field name="tower" optional="show"/>
+                <field name="unit_number" optional="hide"/>
+
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="helpdesk_order_form_view">
+        <field name="name">HelpDesk Form</field>
+        <field name="model">helpdesk.order</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm" class="oe_highlight"
+                            invisible="state not in ('draft')"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state not in ('draft')"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="name"/>
+                            <field name="email"/>
+                            <field name="categories"/>
+                            <field name="sub_categories"/>
+                            <field name="project"/>
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </group>
+                        <group>
+                            <field name="tower"/>
+                            <field name="unit_number"/>
+                            <field name="description"/>
+                            <field name="company_id"/>
+                            <field name="user_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="helpdesk_order_action">
+        <field name="name">Helpdesk Order</field>
+        <field name="res_model">helpdesk.order</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem
+            id="helpdesk_order"
+            name="Helpdesk Order"
+            parent="helpdesk.helpdesk_ticket_menu_main"
+            action="helpdesk_order_action"
+            sequence="1"/>
+
+</odoo>

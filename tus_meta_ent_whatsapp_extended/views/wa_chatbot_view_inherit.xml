@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="whatsapp_chatbot_script_view_form_booking_inherit" model="ir.ui.view">
+            <field name="name">whatsapp.chatbot.script.view.form.booking.inherit</field>
+            <field name="model">whatsapp.chatbot.script</field>
+            <field name="inherit_id" ref="odoo_whatsapp_ent_chatbot.whatsapp_chatbot_script_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form//field[@name='action_id']" position="after">
+                    <field name="dynamic_model_id"/>
+                    <field name="receive_action_id" invisible="step_call_type != 'action'"
+                           readonly="step_call_type != 'action'"/>
+                    <field name="next_sq_number"/>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <!-- Inherit Form View to Modify it -->
+        <record id="odoo_chatbot_view_form_inherit_booking" model="ir.ui.view">
+            <field name="name">odoo_whatsapp_chatbot.booking</field>
+            <field name="model">whatsapp.chatbot</field>
+            <field name="inherit_id" ref="odoo_whatsapp_ent_chatbot.whatsapp_chatbot_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='step_type_ids']//tree//field[@name='action_id']" position="after">
+                    <field name="receive_action_id" readonly="step_call_type != 'action'"/>
+                </xpath>
+                <xpath expr="//page[@name='operators']" position="after">
+                    <page string="Template Configuration" id="template Config">
+                        <group>
+                            <group>
+                                <field name="end_template_id"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

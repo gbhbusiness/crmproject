@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+
+        <record id="whatsapp_appointment_chatbot_script_1" model="whatsapp.chatbot.script">
+            <field name="whatsapp_chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="step_call_type">interactive</field>
+            <field name="message">Hello</field>
+            <field name="template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_schedule_template"/>
+            <field name="sequence">1</field>
+            <field name="next_sq_number">1</field>
+        </record>
+
+        <record id="whatsapp_appointment_chatbot_script_9" model="whatsapp.chatbot.script">
+            <field name="whatsapp_chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="step_call_type">action</field>
+            <field name="message">Schedule Appointment</field>
+            <field name="parent_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_script_1"/>
+            <field name="sequence">2</field>
+            <field name="next_sq_number">1</field>
+            <field name="action_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_action_8"/>
+        </record>
+
+        <record id="whatsapp_appointment_chatbot_script_2" model="whatsapp.chatbot.script">
+            <field name="whatsapp_chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="step_call_type">action</field>
+            <!--            <field name="message">Schedule</field>-->
+            <field name="parent_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_script_9"/>
+            <field name="sequence">3</field>
+            <field name="next_sq_number">1</field>
+            <field name="action_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_action_1"/>
+            <field name="receive_action_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_action_9"/>
+        </record>
+
+        <record id="whatsapp_appointment_chatbot_script_3" model="whatsapp.chatbot.script">
+            <field name="whatsapp_chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="step_call_type">action</field>
+            <field name="parent_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_script_9"/>
+            <field name="sequence">4</field>
+            <field name="next_sq_number">1</field>
+            <field name="action_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_action_2"/>
+            <field name="receive_action_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_action_3"/>
+        </record>
+
+        <record id="whatsapp_appointment_chatbot_script_4" model="whatsapp.chatbot.script">
+            <field name="whatsapp_chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="step_call_type">action</field>
+            <field name="parent_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_script_9"/>
+            <field name="sequence">5</field>
+            <field name="next_sq_number">1</field>
+            <field name="action_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_action_5"/>
+            <field name="receive_action_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_action_4"/>
+        </record>
+
+        <record id="whatsapp_appointment_chatbot_script_5" model="whatsapp.chatbot.script">
+            <field name="whatsapp_chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="step_call_type">action</field>
+            <field name="parent_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_script_9"/>
+            <field name="sequence">6</field>
+            <field name="next_sq_number">1</field>
+            <field name="action_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_action_6"/>
+            <field name="receive_action_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_action_6"/>
+        </record>
+
+        <record id="whatsapp_appointment_chatbot_script_6" model="whatsapp.chatbot.script">
+            <field name="whatsapp_chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="step_call_type">interactive</field>
+            <field name="parent_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_script_9"/>
+            <field name="template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_confirmation_template"/>
+            <field name="sequence">7</field>
+            <field name="next_sq_number">1</field>
+        </record>
+
+
+        <record id="whatsapp_appointment_chatbot_script_7" model="whatsapp.chatbot.script">
+            <field name="whatsapp_chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="step_call_type">action</field>
+            <field name="message">Confirm</field>
+            <field name="parent_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_script_9"/>
+            <field name="sequence">8</field>
+            <field name="next_sq_number">1</field>
+            <field name="action_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_action_7"/>
+        </record>
+
+
+        <record id="whatsapp_appointment_chatbot_script_8" model="whatsapp.chatbot.script">
+            <field name="whatsapp_chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="step_call_type">message</field>
+            <field name="answer">Thank you for your confirmation. We Will contact you shortly</field>
+            <field name="sequence">9</field>
+            <field name="next_sq_number">0</field>
+        </record>
+
+        <record id="whatsapp_appointment_chatbot_script_10" model="whatsapp.chatbot.script">
+            <field name="whatsapp_chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="step_call_type">action</field>
+            <field name="message">Cancel Appointment</field>
+            <field name="sequence">10</field>
+            <field name="action_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_action_10"/>
+            <field name="next_sq_number">1</field>
+        </record>
+        <record id="whatsapp_appointment_chatbot_script_11" model="whatsapp.chatbot.script">
+            <field name="whatsapp_chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="step_call_type">action</field>
+            <field name="message">Proceed Cancellation</field>
+            <field name="sequence">11</field>
+            <field name="action_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_action_11"/>
+            <field name="action_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_action_11"/>
+            <field name="next_sq_number">1</field>
+        </record>
+        <record id="whatsapp_appointment_chatbot_script_12" model="whatsapp.chatbot.script">
+            <field name="whatsapp_chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="step_call_type">action</field>
+            <field name="message">Yes</field>
+            <field name="sequence">12</field>
+            <field name="action_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot_action_12"/>
+            <field name="next_sq_number">1</field>
+        </record>
+
+
+        <record id="whatsapp_appointment_chatbot_script_13" model="whatsapp.chatbot.script">
+            <field name="whatsapp_chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="step_call_type">message</field>
+            <field name="message">No</field>
+            <field name="answer">Process Terminated Please start with hello</field>
+            <field name="sequence">13</field>
+            <field name="next_sq_number">0</field>
+        </record>
+
+
+    </data>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="whatsapp_template_view_form_dynamic_field" model="ir.ui.view">
+            <field name="name">whatsapp.template.inherit.appointment</field>
+            <field name="model">whatsapp.template</field>
+            <field name="inherit_id" ref="whatsapp.whatsapp_template_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='Variables']" position="after">
+                    <page string="Chatbot Template Configuration" name="chatbot_template_conf">
+                        <group>
+                            <field name="dynamic_model_id" invisible="1"/>
+                            <field name="is_project_template" invisible="template_category != 'interactive'"/>
+                            <field name="is_tower_template" invisible="template_category != 'interactive'"/>
+                            <field name="is_category_template" invisible="template_category != 'interactive'"/>
+                            <field name="is_value_template" invisible="template_category != 'interactive'"/>
+                            <field name="is_sub_cat_template" invisible="template_category != 'interactive'"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+

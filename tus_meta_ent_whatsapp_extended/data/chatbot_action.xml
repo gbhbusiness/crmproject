@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="whatsapp_appointment_chatbot" model="whatsapp.chatbot">
+            <field name="title">Whatsapp Appointment Chatbot</field>
+        </record>
+
+        <record id="whatsapp_appointment_chatbot_action_1" model="whatsapp.ir.actions">
+            <field name="chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="name">Send appointment types</field>
+            <field name="is_custom_action" eval="True"/>
+            <field name="dynamic_model_id" ref="appointment.model_appointment_type"/>
+            <field name="dynamic_field_id" ref="appointment.field_appointment_type__name"/>
+            <field name="dynamic_working_selection">send</field>
+            <field name="dynamic_selection">search</field>
+            <field name="dynamic_send_template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_schedule_type_template"/>
+            <field name="dynamic_template_list_title">Options</field>
+        </record>
+
+        <record id="whatsapp_appointment_chatbot_action_3" model="whatsapp.ir.actions">
+            <field name="chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="name">Receive appointment Types</field>
+            <field name="is_custom_action" eval="True"/>
+            <field name="dynamic_model_id" ref="calendar.model_calendar_event"/>
+            <field name="dynamic_field_id" ref="appointment.field_calendar_event__appointment_type_id"/>
+            <field name="dynamic_working_selection">receive</field>
+            <field name="dynamic_selection">write</field>
+        </record>
+
+        <record id="whatsapp_appointment_chatbot_action_2" model="whatsapp.ir.actions">
+            <field name="chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="name">Send appointment Dates</field>
+            <field name="is_custom_action" eval="True"/>
+            <field name="dynamic_model_id" ref="calendar.model_calendar_event"/>
+            <field name="dynamic_field_id" ref="calendar.field_calendar_event__start_date"/>
+            <field name="dynamic_working_selection">send</field>
+            <field name="dynamic_selection">search</field>
+            <field name="dynamic_send_template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_schedule_date_template"/>
+            <field name="dynamic_template_list_title">Appointment Date</field>
+        </record>
+
+        <record id="whatsapp_appointment_chatbot_action_4" model="whatsapp.ir.actions">
+            <field name="chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="name">Receive appointment Dates</field>
+            <field name="is_custom_action" eval="True"/>
+            <field name="dynamic_model_id" ref="calendar.model_calendar_event"/>
+            <field name="dynamic_field_id" ref="calendar.field_calendar_event__start_date"/>
+            <field name="dynamic_working_selection">receive</field>
+            <field name="dynamic_selection">write</field>
+        </record>
+
+
+        <record id="whatsapp_appointment_chatbot_action_5" model="whatsapp.ir.actions">
+            <field name="chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="name">Send appointment Hours</field>
+            <field name="is_custom_action" eval="True"/>
+            <field name="dynamic_model_id" ref="appointment.model_appointment_type"/>
+            <field name="dynamic_field_id" ref="appointment.field_appointment_type__appointment_duration"/>
+            <field name="dynamic_working_selection">send</field>
+            <field name="dynamic_selection">search</field>
+            <field name="dynamic_send_template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_schedule_duration_template"/>
+            <field name="dynamic_template_list_title">Appointment Hours</field>
+        </record>
+
+        <record id="whatsapp_appointment_chatbot_action_6" model="whatsapp.ir.actions">
+            <field name="chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="name">Receive appointment Hours</field>
+            <field name="is_custom_action" eval="True"/>
+            <field name="dynamic_model_id" ref="calendar.model_calendar_event"/>
+            <field name="dynamic_field_id" ref="calendar.field_calendar_event__start"/>
+            <field name="dynamic_working_selection">receive</field>
+            <field name="dynamic_selection">write</field>
+        </record>
+
+
+        <record id="whatsapp_appointment_chatbot_action_7" model="whatsapp.ir.actions">
+            <field name="chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="name">Confirm Appointment</field>
+            <field name="is_custom_action" eval="True"/>
+            <field name="dynamic_working_selection">action</field>
+            <field name="dynamic_action_selection">confirm</field>
+        </record>
+
+
+        <record id="whatsapp_appointment_chatbot_action_8" model="whatsapp.ir.actions">
+            <field name="chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="name">Send Location Types</field>
+            <field name="is_custom_action" eval="True"/>
+            <field name="dynamic_model_id" ref="calendar.model_calendar_event"/>
+            <field name="dynamic_field_id" ref="tus_meta_ent_whatsapp_extended.field_calendar_event__location_type"/>
+            <field name="dynamic_working_selection">send</field>
+            <field name="dynamic_selection">search</field>
+            <field name="dynamic_send_template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_schedule_location_template"/>
+            <field name="dynamic_template_list_title">Location</field>
+        </record>
+
+
+        <record id="whatsapp_appointment_chatbot_action_9" model="whatsapp.ir.actions">
+            <field name="chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="name">Receive Location Types</field>
+            <field name="is_custom_action" eval="True"/>
+            <field name="dynamic_model_id" ref="calendar.model_calendar_event"/>
+            <field name="dynamic_field_id" ref="tus_meta_ent_whatsapp_extended.field_calendar_event__location_type"/>
+            <field name="dynamic_working_selection">receive</field>
+            <field name="dynamic_selection">write</field>
+        </record>
+
+
+        <record id="whatsapp_appointment_chatbot_action_10" model="whatsapp.ir.actions">
+            <field name="chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="name">Cancel Appointment</field>
+            <field name="is_custom_action" eval="True"/>
+            <field name="dynamic_model_id" ref="calendar.model_calendar_event"/>
+            <field name="dynamic_field_id" ref="calendar.field_calendar_event__name"/>
+            <field name="dynamic_working_selection">action</field>
+            <field name="dynamic_selection">search</field>
+            <field name="dynamic_action_selection">cancel</field>
+            <field name="dynamic_send_template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_cancel_template"/>
+            <field name="dynamic_template_list_title">Bookings</field>
+        </record>
+
+        <record id="whatsapp_appointment_chatbot_action_11" model="whatsapp.ir.actions">
+            <field name="chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="name">Confirm Cancellation</field>
+            <field name="is_custom_action" eval="True"/>
+            <field name="dynamic_send_template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_confirm_cancel_template"/>
+        </record>
+
+
+        <record id="whatsapp_appointment_chatbot_action_12" model="whatsapp.ir.actions">
+            <field name="chatbot_id" ref="tus_meta_ent_whatsapp_extended.whatsapp_appointment_chatbot"/>
+            <field name="name">Initiate Cancellation Appointment</field>
+            <field name="is_custom_action" eval="True"/>
+            <field name="dynamic_working_selection">action</field>
+            <field name="dynamic_selection">cancel</field>
+            <field name="dynamic_action_selection">cancel</field>
+            <field name="dynamic_model_id" ref="calendar.model_calendar_event"/>
+        </record>
+
+
+    </data>
+</odoo>

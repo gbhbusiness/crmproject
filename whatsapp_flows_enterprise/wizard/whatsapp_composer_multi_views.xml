@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="whatsapp_composer_multi_view_form">
+        <field name="name">whatsapp.composer.multi.view.form</field>
+        <field name="model">whatsapp.composer.multi</field>
+        <field name="arch" type="xml">
+            <form string="Whatsapp Composer">
+                <group>
+                    <group>
+                        <field name="partner_ids" widget="many2many_tags" placeholder="Add contacts to notify..."/>
+                        <field name="domain_wa_template_ids" invisible="1"/>
+                        <field name="wa_template_id" domain="[('id', 'in', domain_wa_template_ids)]"/>
+                    </group>
+                    <field name="body_html" force_save="1"/>
+                </group>
+                <footer>
+                    <button
+                        name="send_multi_whatsapp_message"
+                        string="Send Messages"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_whatsapp_composer_multi" model="ir.actions.act_window">
+        <field name="name">Whatsapp Composer</field>
+        <field name="res_model">whatsapp.composer.multi</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    </data>
+</odoo>

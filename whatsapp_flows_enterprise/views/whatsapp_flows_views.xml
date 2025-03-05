@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="wa_flows_view_form" model="ir.ui.view">
+            <field name="name">wa.flows.view.form</field>
+            <field name="model">wa.flows</field>
+            <field name="arch" type="xml">
+                <form string="Whatsapp Flow">
+                    <header>
+                        <button name="create_whatsapp_flow" type="object" string="Create Whatsapp Flow" class="oe_highlight" invisible="flow_state != 'draft'"/>
+                        <button name="delete_whatsapp_flow" type="object" string="Delete Whatsapp Flow" class="oe_highlight" invisible="flow_state != 'created'" confirm="Are you sure you want to delete this flow in Meta?"/>
+                        <button name="publish_whatsapp_flow" type="object" string="Publish Whatsapp Flow" class="oe_highlight" invisible="flow_state != 'created'" confirm="Are you sure you want to publish this flow?"/>
+                        <button name="deprecate_whatsapp_flow" type="object" string="Deprecate Whatsapp Flow" class="oe_highlight" invisible="flow_state != 'published'" confirm="Are you sure you want to deprecate this flow?"/>
+                        <field name="flow_state" widget="statusbar" options="{'clickable': '1'}"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only" string="WA Flow"/>
+                            <h1>
+                                <field name="name" required="1"/>
+                            </h1>
+                            <group>
+                                <field name="wa_account_id" required="1"/>
+                                <field name="flows_categories" required="1"/>
+                                <field name="template_id"/>
+                                <field name="flow_id" invisible="flow_state == 'draft'" readonly="flow_state == 'published'"/>
+                                <field name="flow_model_id" options="{'no_create': True}"/>
+                                <field name="resource_ref" options="{'hide_model': True, 'no_create': True, 'no_open': True}" readonly="False"/>
+                                <field name="create_model_id" options="{'no_create': True}"/>
+                                <field name="field_mapping_ids">
+                                    <tree string="Field Mapping" editable="bottom">
+                                        <field name="sequence" widget="handle" />
+                                        <field name="mapped_field" domain="[('model_id', '=', parent.create_model_id)]"/>
+<!--                                        widget="DynamicModelFieldSelectorChar" options="{'model': parent.model_id.model}"-->
+                                    </tree>
+                                </field>
+                            </group>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="wa_flows_view_tree" model="ir.ui.view">
+            <field name="name">wa.flows.view.tree</field>
+            <field name="model">wa.flows</field>
+            <field name="arch" type="xml">
+                <tree string="WA Flow">
+                    <field name="name"/>
+                    <field name="flow_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="wa_flows_action" model="ir.actions.act_window">
+            <field name="name">WA Flow</field>
+            <field name="res_model">wa.flows</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="wa_flow" name="Whatsapp Flows"
+                  web_icon="whatsapp_flows_enterprise,static/description/icon.png"/>
+        <menuitem id="whatsapp_flow" name="Whatsapp Flows" parent="wa_flow"
+                  action="wa_flows_action"/>
+    </data>
+</odoo>

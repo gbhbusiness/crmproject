@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <function model="ir.model.fields" name="formbuilder_whitelist">
+        <value>helpdesk.ticket</value>
+        <value eval="[
+            'partner_phone',
+            'ticket_type_id',
+            'services_ids',
+            'project_id',
+            'tower_id',
+            'unit_no',
+        ]" />
+    </function>
+
+    <!-- helpdesk.project -->
+    <record id="project_1" model="helpdesk.project">
+        <field name="name">Hilal 1 Project</field>
+    </record>
+    <record id="project_2" model="helpdesk.project">
+        <field name="name">Hilal 2 Project</field>
+    </record>
+    <record id="project_3" model="helpdesk.project">
+        <field name="name">Emaar Residence</field>
+    </record>
+    <record id="project_4" model="helpdesk.project">
+        <field name="name">Emaar Square</field>
+    </record>
+
+    <!-- project.tower -->
+    <record id="project_a" model="project.tower">
+        <field name="name">A</field>
+    </record>
+    <record id="project_b" model="project.tower">
+        <field name="name">B</field>
+    </record>
+    <record id="project_c" model="project.tower">
+        <field name="name">C</field>
+    </record>
+    <record id="project_common_area" model="project.tower">
+        <field name="name">Common Area</field>
+    </record>
+    <record id="project_driver_room" model="project.tower">
+        <field name="name">Driver Room</field>
+    </record>
+    <record id="project_e8" model="project.tower">
+        <field name="name">E8</field>
+    </record>
+    <record id="project_e9" model="project.tower">
+        <field name="name">E9</field>
+    </record>
+    <record id="project_e10" model="project.tower">
+        <field name="name">E10</field>
+    </record>
+    <record id="project_elevator" model="project.tower">
+        <field name="name">Elevator</field>
+    </record>
+    <record id="project_gym" model="project.tower">
+        <field name="name">GYM</field>
+    </record>
+    <record id="project_parking" model="project.tower">
+        <field name="name">Parking</field>
+    </record>
+
+</odoo>

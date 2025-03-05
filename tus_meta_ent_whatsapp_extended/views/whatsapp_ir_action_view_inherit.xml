@@ -1,0 +1,35 @@
+<odoo>
+  <data>
+    <record id="whatsapp_ir_action_inherit_form_view" model="ir.ui.view">
+      <field name="name">Whatsapp Ir Action inherit</field>
+      <field name="model">whatsapp.ir.actions</field>
+      <field name="inherit_id" ref="odoo_whatsapp_ent_chatbot.whatsapp_ir_action_view_form"/>
+      <field name="arch" type="xml">
+         <xpath expr="//group" position="inside">
+                <field name="is_custom_action"/>
+                <field name="dynamic_is_chatbot_ended"/>
+                <field name="dynamic_message"/>
+         </xpath>
+          <xpath expr="//group" position="after">
+              <group name="dynamic_models" string="dynamic Model selection" invisible="is_custom_action != True">
+                  <group>
+                      <field name="dynamic_working_selection"/>
+                      <field name="dynamic_selection"/>
+                      <field name="dynamic_action_selection" invisible="dynamic_working_selection != 'action'"/>
+                      <field name="dynamic_model_id"/>
+                      <field name="dynamic_field_id" domain="[('model_id', '=', dynamic_model_id)]"/>
+                  </group>
+                  <group>
+                        <field name="dynamic_send_template_id"/>
+                        <field name="dynamic_template_list_title"/>
+                        <field name="dynamic_field_ids" domain="[('model_id', '=', dynamic_model_id)]" widget="many2many_tags" invisible="not dynamic_send_template_id"/>
+                  </group>
+              </group>
+          </xpath>
+          <xpath expr="//field[@name='binding_model_id']" position="attributes">
+              <attribute name="invisible">is_custom_action</attribute>
+          </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="whatsapp_template_flow_form_view_inherit" model="ir.ui.view">
+            <field name="name">whatsapp.template.flow.inherit.form</field>
+            <field name="model">whatsapp.template</field>
+            <field name="inherit_id" ref="whatsapp.whatsapp_template_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//field[@name="template_type"]' position='after'>
+                    <field name="wa_flow_id" domain="[('flow_state','=', 'published')]"/>
+                </xpath>
+                <xpath expr='//field[@name="button_ids"]//field[@name="url_type"]' position='after'>
+                    <field name="flow_id" readonly="button_type != 'flow'"/>
+                    <field name="screen_id" readonly="button_type != 'flow'"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_wa_flows_template" model="ir.actions.act_window">
+            <field name="name">WA Flow Templates</field>
+            <field name="res_model">whatsapp.template</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('wa_flow_id', '!=', False)]</field>
+        </record>
+
+        <menuitem id="whatsapp_flow_template" name="Whatsapp Flows Templates" parent="whatsapp_flows_enterprise.wa_flow"
+                  action="action_wa_flows_template"/>
+    </data>
+</odoo>

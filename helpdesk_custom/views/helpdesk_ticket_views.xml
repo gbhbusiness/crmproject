@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="helpdesk_service_tree_view" model="ir.ui.view">
+            <field name="name">Helpdesk Service</field>
+            <field name="model">helpdesk.service</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name" required="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="helpdesk_service_action" model="ir.actions.act_window">
+            <field name="name">Helpdesk Service</field>
+            <field name="res_model">helpdesk.service</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem action="helpdesk_service_action" id="menu_helpdesk_service" parent="helpdesk.helpdesk_menu_config" sequence="8"/>
+
+        <record id="helpdesk_project_tree_view" model="ir.ui.view">
+            <field name="name">Helpdesk Project</field>
+            <field name="model">helpdesk.project</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name" required="1"/>
+                    <field name="tower_ids" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="helpdesk_project_action" model="ir.actions.act_window">
+            <field name="name">Project</field>
+            <field name="res_model">helpdesk.project</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem action="helpdesk_project_action" id="menu_helpdesk_project" parent="helpdesk.helpdesk_menu_config" sequence="10"/>
+
+        <record id="helpdesk_ticket_type_view_tree_service_custom" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.type.tree</field>
+            <field name="model">helpdesk.ticket.type</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_ticket_type_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="services_ids" widget="many2many_tags"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="helpdesk_ticket_view_form_service_custom" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.form</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='ticket_type_id']" position="after">
+                    <field name="type_services_ids" widget="many2many_tags" invisible="1"/>
+                    <field name="services_ids" widget="many2many_tags" domain="[('id','in',type_services_ids)]"/>
+                    <!-- <field name="is_portal_ticket"/> -->
+                </xpath>
+                <xpath expr="//field[@name='email_cc']" position="after">
+                    <field name="project_id"/>
+                    <field name="project_tower_ids" widget="many2many_tags" invisible="1"/>
+                    <field name="tower_id" domain="[('id','in',project_tower_ids)]"/>
+                    <field name="unit_no"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="helpdesk_team_view_form_inherit" model="ir.ui.view">
+            <field name="name">helpdesk.team.form</field>
+            <field name="model">helpdesk.team</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='member_ids']" position="after">
+                    <div>
+                        <field name="website_form_view_id" invisible="0"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

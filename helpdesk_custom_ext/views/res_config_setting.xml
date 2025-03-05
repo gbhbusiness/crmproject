@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="res_config_setting_inherit_form" model="ir.ui.view">
+        <field name="name">res.config.setting.inherit.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="HelpDesk" string="HelpDesk" name="helpdesk_custom_ext"
+                     logo="/helpdesk_custom_ext/static/description/icon.png">
+
+                    <block title="HelpDesk">
+                        <div class="row mt16 o_settings_container">
+                            <setting string="Team ">
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <field name="team_id"/>
+                                    </div>
+                                </div>
+                            </setting>
+                        </div>
+                    </block>
+                    <block title="Whatsapp Template">
+                        <div class="row mt16 o_settings_container">
+                            <setting string="Helpdesk Whatsapp Template">
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <field name="helpdesk_template_id"/>
+                                    </div>
+                                </div>
+                            </setting>
+                        </div>
+                    </block>
+                </app>
+
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

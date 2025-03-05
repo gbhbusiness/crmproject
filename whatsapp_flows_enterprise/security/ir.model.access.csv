@@ -1,0 +1,4 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_wa_flows","access.wa.flows","model_wa_flows",,1,1,1,1
+"access_field_mapping","field.mapping","model_field_mapping",,1,1,1,1
+"access_whatsapp_composer_multi","access.whatsapp.composer.multi","model_whatsapp_composer_multi",,1,1,1,1

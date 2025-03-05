@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <data noupdate="1">
+
+        <!-- schedule template -->
+        <record id="wa_interactive_appointment_schedule_template" model="whatsapp.template">
+            <field name="name">wa_interactive_appointment_schedule_template</field>
+            <field name="template_name">wa_interactive_appointment_schedule_template</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="template_category">interactive</field>
+            <field name="status">draft</field>
+            <field name="template_type">marketing</field>
+            <field name="lang_code">en</field>
+            <field name="body">Hello,
+Thank you for reaching out to Fai 'n' Fa Hair Masters 🤗.
+Please select the Options:
+            </field>
+        </record>
+
+
+        <record
+                id="wa_interactive_appointment_schedule_template_interactive" model="wa.interactive.template">
+            <field name="interactive_type">list</field>
+            <field name="wa_template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_schedule_template"
+            />
+            <field
+                    name="interactive_list_ids"
+                    eval="[
+            (5, 0, 0),
+            (0, 0, {
+                'main_title': 'Menu',
+                'title_ids': [(5, 0, 0),
+                (0, 0, {
+                   'title': 'Schedule Appointment'
+                }),
+                (0, 0, {
+                   'title': 'Cancel Appointment'
+                })]
+            })]"
+            />
+        </record>
+
+
+        <!-- Location Template -->
+        <record id="wa_interactive_appointment_schedule_location_template" model="whatsapp.template">
+            <field name="name">wa_interactive_appointment_schedule_location_template</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="template_category">interactive</field>
+            <field name="status">draft</field>
+            <field name="is_sub_cat_template">True</field>
+            <field name="template_type">marketing</field>
+            <field name="lang_code">en</field>
+            <field name="body">Hello,
+To help us assist you better,
+Please Select your preferred duration for the appointment.
+            </field>
+        </record>
+        <record id="wa_interactive_appointment_schedule_location_template_interactive" model="wa.interactive.template">
+            <field name="interactive_type">list</field>
+            <field name="wa_template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_schedule_location_template"/>
+        </record>
+
+        <!-- Type Template-->
+
+        <record id="wa_interactive_appointment_schedule_type_template" model="whatsapp.template">
+            <field name="name">wa_interactive_appointment_schedule_type_template</field>
+            <field name="template_name">wa_interactive_appointment_schedule_type_template</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="template_category">interactive</field>
+            <field name="status">draft</field>
+            <field name="template_type">marketing</field>
+            <field name="lang_code">en</field>
+            <field name="body">Hello,
+To help us assist you better,
+Please let us know the type of appointment you would like to schedule
+            </field>
+        </record>
+
+        <record id="wa_interactive_appointment_schedule_type_template_interactive" model="wa.interactive.template">
+            <field name="interactive_type">list</field>
+            <field name="wa_template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_schedule_type_template"/>
+        </record>
+
+        <!-- Date Template -->
+
+        <record id="wa_interactive_appointment_schedule_date_template" model="whatsapp.template">
+            <field name="name">wa_interactive_appointment_schedule_date_template</field>
+            <field name="template_name">wa_interactive_appointment_schedule_date_template</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="template_category">interactive</field>
+            <field name="status">draft</field>
+            <field name="template_type">marketing</field>
+            <field name="lang_code">en</field>
+            <field name="is_tower_template">True</field>
+            <field name="body">Hello,
+To help us assist you better,
+Please Select your preferred date for the appointment.
+            </field>
+        </record>
+
+        <record id="wa_interactive_appointment_schedule_date_interactive" model="wa.interactive.template">
+            <field name="interactive_type">list</field>
+            <field name="wa_template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_schedule_date_template"/>
+        </record>
+
+        <!-- Duration template -->
+
+        <record id="wa_interactive_appointment_schedule_duration_template" model="whatsapp.template">
+            <field name="name">wa_interactive_appointment_schedule_duration_template</field>
+            <field name="template_name">wa_interactive_appointment_schedule_duration_template</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="template_category">interactive</field>
+            <field name="status">draft</field>
+            <field name="is_category_template">True</field>
+            <field name="template_type">marketing</field>
+            <field name="lang_code">en</field>
+            <field name="body">Hello,
+To help us assist you better,
+Please Select your preferred duration for the appointment.
+            </field>
+        </record>
+
+        <record id="wa_interactive_appointment_schedule_duration_template_interactive" model="wa.interactive.template">
+            <field name="interactive_type">list</field>
+            <field name="wa_template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_schedule_duration_template"/>
+        </record>
+
+
+        <!--        Confirm Template-->
+
+        <record id="wa_interactive_appointment_confirmation_template" model="whatsapp.template">
+            <field name="name">wa_interactive_appointment_confirmation_template</field>
+            <field name="template_name">wa_interactive_appointment_confirmation_template</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="template_category">interactive</field>
+            <field name="status">draft</field>
+            <field name="template_type">marketing</field>
+            <field name="lang_code">en</field>
+            <field name="body">Please Confirm Your Appointment</field>
+        </record>
+
+        <record id="wa_interactive_appointment_confirmation_template_interactive"
+                model="wa.interactive.template">
+            <field name="interactive_type">button</field>
+            <field name="wa_template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_confirmation_template"
+            />
+            <field
+                    name="interactive_button_ids"
+                    eval="[
+            (5, 0, 0),
+            (0, 0, {
+                'title': 'Confirm',
+            }),
+            (0, 0, {
+                'title': 'Cancel',
+            })]"
+            />
+        </record>
+
+
+        <!--        Cancel Template-->
+
+        <record id="wa_interactive_appointment_cancel_template" model="whatsapp.template">
+            <field name="name">wa_interactive_appointment_cancel_template</field>
+            <field name="template_name">wa_interactive_appointment_cancel_template</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="template_category">interactive</field>
+            <field name="status">draft</field>
+            <field name="template_type">marketing</field>
+            <field name="lang_code">en</field>
+            <field name="is_value_template">True</field>
+            <field name="body">&#160;</field>
+        </record>
+        <record id="wa_interactive_appointment_cancel_template_interactive"
+                model="wa.interactive.template">
+            <field name="interactive_type">button</field>
+            <field name="wa_template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_cancel_template"
+            />
+            <field
+                    name="interactive_button_ids"
+                    eval="[(5, 0, 0),(0, 0, {'title': 'Proceed Cancellation'})]"
+            />
+        </record>
+
+
+        <!-- Confirm Cancel Template -->
+
+        <record id="wa_interactive_appointment_confirm_cancel_template" model="whatsapp.template">
+            <field name="name">wa_interactive_appointment_confirm_cancel_template</field>
+            <field name="template_name">wa_interactive_appointment_confirm_cancel_template</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="template_category">interactive</field>
+            <field name="status">draft</field>
+            <field name="template_type">marketing</field>
+            <field name="lang_code">en</field>
+            <field name="body">We noticed you’ve requested to cancel your appointment.
+                               Are you sure you’d like to proceed with cancellation?
+            </field>
+        </record>
+        <record id="wa_interactive_appointment_confirm_cancel_template_interactive"
+                model="wa.interactive.template">
+            <field name="interactive_type">button</field>
+            <field name="wa_template_id"
+                   ref="tus_meta_ent_whatsapp_extended.wa_interactive_appointment_confirm_cancel_template"
+            />
+            <field
+                    name="interactive_button_ids"
+                    eval="[(5, 0, 0),(0, 0, {'title': 'Yes'}),(0, 0, {'title': 'No'})]"/>
+        </record>
+
+
+    </data>
+
+</odoo>
+
