@@ -160,7 +160,7 @@ class WhatsappAccountInherit(models.Model):
 
                                     if not helpdesk_order:
                                         helpdesk_ticket = helpdesk_order.sudo().create({
-                                            'name': parent.name + " Chatbot Ticket",
+                                            'name': parent.name,
                                             'partner_id': parent.id,
                                             'team_id': self.env.company.team_id.id
                                         })
