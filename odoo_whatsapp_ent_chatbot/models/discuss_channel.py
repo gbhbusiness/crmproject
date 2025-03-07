@@ -420,7 +420,7 @@ class ChatbotDiscussChannel(models.Model):
                                         'parent_message_id').booking_id:
                                     if chat.action_id.dynamic_action_selection not in ['reschedule', 'cancel']:
                                         if not dummy_booking_id:
-                                            booking_id |= self.env['helpdesk.order'].sudo().create({
+                                            booking_id |= self.env['helpdesk.ticket'].sudo().create({
                                                 'partner_id': partner_id.id,
                                                 'user_id': fields.first(wa_account_id.notify_user_ids).id,
                                             })
@@ -827,7 +827,7 @@ class ChatbotMailMessage(models.Model):
     wa_chatbot_id = fields.Many2one(
         comodel_name="whatsapp.chatbot", string="Whatsapp Chatbot"
     )
-    booking_id = fields.Many2one(comodel_name='helpdesk.order', string='Booking id')
+    booking_id = fields.Many2one(comodel_name='helpdesk.ticket', string='Booking id')
 
     @api.model_create_multi
     def create(self, vals_list):
