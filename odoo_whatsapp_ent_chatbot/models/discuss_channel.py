@@ -177,7 +177,7 @@ class ChatbotDiscussChannel(models.Model):
         )
         booking_id = self.env['helpdesk.ticket']
         dummy_booking_id = self.env['helpdesk.ticket'].sudo().search(
-            [('partner_id', '=', message.author_id.id)])
+            [('partner_id', '=', message.author_id.id)]).filtered(lambda x: x.stage_id.name == "New")
         if self.env.context.get('stop_recur'):
             return res
         if message:
