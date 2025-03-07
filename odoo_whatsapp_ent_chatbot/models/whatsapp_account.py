@@ -1,6 +1,7 @@
 from odoo import fields, models
 import json
 
+
 class WhatsappAccountInherit(models.Model):
     _inherit = "whatsapp.account"
 
@@ -120,13 +121,14 @@ class WhatsappAccountInherit(models.Model):
                             vals_list = self.filter_json_nfm(json_nfm)
                             contact_no = sender_mobile.join("+") + sender_mobile
 
-                            parent= self.env['res.partner'].sudo().search([('mobile', '=', contact_no)])
-                            helpdesk_order =self.env['helpdesk.order'].sudo().search([('partner_id','=',parent.id),('state','not in',['confirm','cancel'])])
+                            parent = self.env['res.partner'].sudo().search([('mobile', '=', contact_no)])
+                            helpdesk_order = self.env['helpdesk.ticket'].sudo().search(
+                                [('partner_id', '=', parent.id)]).filtered(lambda x: x.stage_id.name == "New")
 
                             if json_nfm.get("flow_token", False) and json_nfm.get("flow_token") != "unused":
                                 flow_id = json_nfm.get("flow_token")
                                 flow = self.env["wa.flows"].sudo().search([("flow_id", "=", flow_id)])
-                                if flow.flow_model_id.model == "helpdesk.order":
+                                if flow.flow_model_id.model == "helpdesk.ticket":
                                     def sort_by_sq(e):
                                         return e.split("_")[-1]
 
@@ -142,7 +144,7 @@ class WhatsappAccountInherit(models.Model):
 
                                     register_vals = {}
                                     for count, field in enumerate(flow.field_mapping_ids):
-                                        if field.mapped_field.sudo().ttype in ["char", "text"]:
+                                        if field.mapped_field.sudo().ttype in ["char", "text","html"]:
                                             register_vals.update({
                                                 field.mapped_field.name: answer_list[
                                                     count
@@ -156,9 +158,20 @@ class WhatsappAccountInherit(models.Model):
                                                 ].replace('_', ' ')
                                             })
 
-                                    helpdesk_order.sudo().write(
-                                        register_vals
-                                    )
+                                    if not helpdesk_order:
+                                        helpdesk_ticket = helpdesk_order.sudo().create({
+                                            'name': parent.name + " Chatbot Ticket",
+                                            'partner_id': parent.id,
+                                            'team_id': self.env.company.team_id.id
+                                        })
+                                        helpdesk_ticket.response_data = answer_list
+                                        helpdesk_ticket.sudo().write(register_vals)
+
+                                    if helpdesk_order:
+                                        helpdesk_order.sudo().write(
+                                            register_vals
+                                        )
+                                    # message ="Whatsapp Flow Received"
 
                                     if channel.wa_chatbot_id and channel.script_sequence:
                                         current_chatbot_script = channel.wa_chatbot_id.mapped("step_type_ids").filtered(
@@ -166,18 +179,36 @@ class WhatsappAccountInherit(models.Model):
                                         next_script = current_chatbot_script.sequence + current_chatbot_script.next_sq_number
                                         chatbot_script_lines = channel.wa_chatbot_id.step_type_ids.filtered(
                                             lambda l: l.sequence == next_script)
-                                        for chat in chatbot_script_lines:
-                                            channel.sudo().write({
-                                                "wa_chatbot_id": chat.whatsapp_chatbot_id.id,
-                                                "script_sequence": chat.sequence,
-                                            })
+                                        # for chat in chatbot_script_lines:
+                                        #     channel.sudo().write({
+                                        #         "wa_chatbot_id": chat.whatsapp_chatbot_id.id,
+                                        #         "script_sequence": chat.sequence,
+                                        #     })
+                                        #
+                                        #     if chat.step_call_type in ["template", "interactive"]:
+                                        #         template = chat.template_id
+                                        #         if template:
+                                        #             whatsapp_composer = (
+                                        #                 self.env["whatsapp.composer"]
+                                        #                 .with_user(self.notify_user_ids.id)
+                                        #                 .with_context(
+                                        #                     {
+                                        #                         "active_id": parent.id,
+                                        #                         "is_chatbot": True,
+                                        #                         "wa_chatbot_id": self.wa_chatbot_id.id,
+                                        #                     }
+                                        #                 )
+                                        #                 .create(
+                                        #                     {
+                                        #                         "phone": parent.mobile,
+                                        #                         "wa_template_id": template.id,
+                                        #                         "res_model": template.model_id.model,
+                                        #                     }
+                                        #                 )
+                                        #             )
+                                        #             new_message = whatsapp_composer.with_context(
+                                        #                 {'stop_recur': True})._send_whatsapp_template()
 
-                                            if chat.step_call_type == "message":
-                                                self.with_context({'stop_recur': True}).with_user(
-                                                    self.notify_user_ids.id).message_post(
-                                                    body=chat.answer,
-                                                    message_type="whatsapp_message",
-                                                )
 
                     else:
                         message = ""

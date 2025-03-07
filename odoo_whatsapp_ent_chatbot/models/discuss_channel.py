@@ -1,11 +1,11 @@
 # Part of Odoo. See COPYRIGHT & LICENSE files for full copyright and licensing details.
 import random
-from datetime import datetime, timedelta,timezone
+from datetime import datetime, timedelta, timezone
 from unicodedata import category
 
 import pytz
 from odoo import api, fields, models, tools
-from markupsafe import  Markup
+from markupsafe import Markup
 
 
 class ChatbotDiscussChannel(models.Model):
@@ -27,7 +27,6 @@ class ChatbotDiscussChannel(models.Model):
     script_sequence = fields.Integer(string="Sequence", default=1)
     is_chatbot_ended = fields.Boolean(string="Inactivate Chatbot")
 
-
     def _convert_time_to_utc(self, date_time, from_timezone):
         local = pytz.timezone(from_timezone).localize(date_time, is_dst=None)
         return local.astimezone(pytz.utc)
@@ -39,7 +38,7 @@ class ChatbotDiscussChannel(models.Model):
                 rec.is_chatbot_ended = False
                 rec.wa_chatbot_id = rec.wa_chatbot_id.id
 
-    def _update_dynamic_template_value(self, current_script,booking, action=False):
+    def _update_dynamic_template_value(self, current_script, booking, action=False):
         if current_script.action_id.dynamic_selection == 'search':
             body = tools.html2plaintext(fields.first(self.message_ids).body)
             dynamic_booking_value_dict = {}
@@ -49,23 +48,24 @@ class ChatbotDiscussChannel(models.Model):
             if current_script.action_id.dynamic_send_template_id.is_category_template:
 
                 # dynamic_description_value =False
-                category  = self.env[current_script.action_id.dynamic_model_id.model].search([])
+                category = self.env[current_script.action_id.dynamic_model_id.model].search([])
                 for cat in category:
-                    if len(cat.name)<=24:
+                    if len(cat.name) <= 24:
                         dynamic_booking_value.append(cat.name)
                     else:
                         dynamic_booking_value.append(cat.name[0:24])
                 # dynamic_booking_value = [i.name for i in
                 #                          self.env[current_script.action_id.dynamic_model_id.model].search([])][0:9]
                 dynamic_description_value = [i.name[:50] for i in
-                                         self.env[current_script.action_id.dynamic_model_id.model].search([])][0:9]
+                                             self.env[current_script.action_id.dynamic_model_id.model].search([])][0:9]
 
-                dynamic_booking_value_dict.update(zip(dynamic_booking_value,dynamic_description_value))
+                dynamic_booking_value_dict.update(zip(dynamic_booking_value, dynamic_description_value))
 
 
 
             elif current_script.action_id.dynamic_send_template_id.is_sub_cat_template:
-                category = self.env[current_script.action_id.dynamic_model_id.model].search([]).filtered(lambda x:x.name[:24].strip() == body).name
+                category = self.env[current_script.action_id.dynamic_model_id.model].search([]).filtered(
+                    lambda x: x.name[:24].strip() == body).name
                 sub_cat = self.env[current_script.action_id.dynamic_model_id.model].search(
                     [('name', '=', category)]).services_ids[0:9]
                 for subcat in sub_cat:
@@ -74,53 +74,61 @@ class ChatbotDiscussChannel(models.Model):
                     else:
                         dynamic_booking_value.append(subcat.name[0:24])
 
-                dynamic_description_value =[i.name[:50] for i in  self.env[current_script.action_id.dynamic_model_id.model].search([('name','=',category)]).services_ids][0:9]
+                dynamic_description_value = [i.name[:50] for i in
+                                             self.env[current_script.action_id.dynamic_model_id.model].search(
+                                                 [('name', '=', category)]).services_ids][0:9]
                 dynamic_booking_value_dict.update(zip(dynamic_booking_value, dynamic_description_value))
 
             elif current_script.action_id.dynamic_send_template_id.is_project_template:
-                projects =  self.env[current_script.action_id.dynamic_model_id.model].search([])
+                projects = self.env[current_script.action_id.dynamic_model_id.model].search([])
                 for project in projects:
                     if len(project.name) <= 24:
                         dynamic_booking_value.append(project.name)
                     else:
                         dynamic_booking_value.append(project.name[0:24])
                 dynamic_description_value = [i.name[:50] for i in
-                                         self.env[current_script.action_id.dynamic_model_id.model].search(
-                                             [])][0:9]
+                                             self.env[current_script.action_id.dynamic_model_id.model].search(
+                                                 [])][0:9]
                 dynamic_booking_value_dict.update(zip(dynamic_booking_value, dynamic_description_value))
 
             elif current_script.action_id.dynamic_send_template_id.is_tower_template:
-                project_name = self.env[current_script.action_id.dynamic_model_id.model].search([]).filtered(lambda x:x.name[:24].strip() == body).name
+                project_name = self.env[current_script.action_id.dynamic_model_id.model].search([]).filtered(
+                    lambda x: x.name[:24].strip() == body).name
                 towers = self.env[current_script.action_id.dynamic_model_id.model].search(
-                                             [('name', '=', project_name)]).tower_ids
+                    [('name', '=', project_name)]).tower_ids
                 for tower in towers:
-                    if len(tower.name)<= 24:
+                    if len(tower.name) <= 24:
                         dynamic_booking_value.append(tower.name)
                     else:
                         dynamic_booking_value.append(tower.name[0:24])
                 dynamic_description_value = [i.name[:50] for i in
-                                         self.env[current_script.action_id.dynamic_model_id.model].search(
-                                             [('name', '=', project_name)]).tower_ids][0:9]
+                                             self.env[current_script.action_id.dynamic_model_id.model].search(
+                                                 [('name', '=', project_name)]).tower_ids][0:9]
                 dynamic_booking_value_dict.update(zip(dynamic_booking_value, dynamic_description_value))
 
             if not reschedule:
                 current_script.action_id.dynamic_send_template_id.wa_interactive_ids.write(
                     {'interactive_list_ids': [(5, 0, 0)] + [(
                         0, 0, {'main_title': current_script.action_id.dynamic_template_list_title,
-                               'title_ids': [(0, 0, {'title': i,'description':j}) for i,j in zip(dynamic_booking_value_dict.keys(),dynamic_booking_value_dict.values())]})]})
+                               'title_ids': [(0, 0, {'title': i, 'description': j}) for i, j in
+                                             zip(dynamic_booking_value_dict.keys(),
+                                                 dynamic_booking_value_dict.values())]})]})
             return current_script.action_id.dynamic_send_template_id
 
     def _get_dynamic_model_values(self, current_script, booking, previous_script, mail_message):
         if booking and current_script and previous_script:
             body = tools.html2plaintext(mail_message.body)
             if current_script.receive_action_id.dynamic_field_id and previous_script.action_id.dynamic_send_template_id.is_category_template:
-                category =  self.env[previous_script.action_id.dynamic_model_id.model].search([]).filtered(lambda x:x.name[:24].strip()  == body)
+                category = self.env[previous_script.action_id.dynamic_model_id.model].search([]).filtered(
+                    lambda x: x.name[:24].strip() == body)
                 dynamic_field_value = category
                 booking.sudo().write({
                     current_script.receive_action_id.dynamic_field_id.name: dynamic_field_value.name
                 })
             elif current_script.receive_action_id.dynamic_field_id and previous_script.action_id.dynamic_send_template_id.is_sub_cat_template:
-                sub_cat = self.env[previous_script.action_id.dynamic_model_id.model].search([('name','=', booking.categories if booking.categories else body)]).services_ids.filtered(lambda x:x.name[:24].strip() == body)
+                sub_cat = self.env[previous_script.action_id.dynamic_model_id.model].search(
+                    [('name', '=', booking.categories if booking.categories else body)]).services_ids.filtered(
+                    lambda x: x.name[:24].strip() == body)
                 # sub_cat = self.env['helpdesk.service'].search([('name','=',body)])
                 booking.sudo().write({
                     current_script.receive_action_id.dynamic_field_id.name: sub_cat.name
@@ -135,7 +143,8 @@ class ChatbotDiscussChannel(models.Model):
                     current_script.receive_action_id.dynamic_field_id.name: project.name
                 })
             elif current_script.receive_action_id.dynamic_field_id and previous_script.action_id.dynamic_send_template_id.is_tower_template:
-                project =  self.env[previous_script.action_id.dynamic_model_id.model].search([('name','=',booking.project)]).tower_ids.filtered(lambda x:x.name[:24].strip() == body)
+                project = self.env[previous_script.action_id.dynamic_model_id.model].search(
+                    [('name', '=', booking.project)]).tower_ids.filtered(lambda x: x.name[:24].strip() == body)
                 # project =  self.env['project.tower'].search([('name','=',body)])
                 # project = self.env[previous_script.action_id.dynamic_model_id.model].search(
                 #             [(previous_script.action_id.dynamic_field_id.name, '=', body)])
@@ -143,12 +152,14 @@ class ChatbotDiscussChannel(models.Model):
                     current_script.receive_action_id.dynamic_field_id.name: project.name
                 })
 
-
             return booking
+
     def _get_active_bot(self, wa_account_id, channel, received_message):
-        child_bot_script = wa_account_id.wa_chatbot_id.mapped('step_type_ids').filtered(lambda x: x.step_call_type == 'chatbot' and x.message == tools.html2plaintext(received_message))
+        child_bot_script = wa_account_id.wa_chatbot_id.mapped('step_type_ids').filtered(
+            lambda x: x.step_call_type == 'chatbot' and x.message == tools.html2plaintext(received_message))
         if child_bot_script:
-            child_chatbot = child_bot_script[0].child_wa_chatbot_id if len(child_bot_script) > 1 else child_bot_script.child_wa_chatbot_id
+            child_chatbot = child_bot_script[0].child_wa_chatbot_id if len(
+                child_bot_script) > 1 else child_bot_script.child_wa_chatbot_id
             channel.child_wa_chatbot = child_chatbot.id
             channel.script_sequence = 1
         if channel.child_wa_chatbot:
@@ -164,9 +175,9 @@ class ChatbotDiscussChannel(models.Model):
         res = super(ChatbotDiscussChannel, self)._notify_thread(
             message, msg_vals=msg_vals, **kwargs
         )
-        booking_id = self.env['helpdesk.order']
-        dummy_booking_id = self.env['helpdesk.order'].sudo().search(
-            [('partner_id', '=', message.author_id.id), ('state', 'not in', ['cancel', 'confirm'])])
+        booking_id = self.env['helpdesk.ticket']
+        dummy_booking_id = self.env['helpdesk.ticket'].sudo().search(
+            [('partner_id', '=', message.author_id.id)])
         if self.env.context.get('stop_recur'):
             return res
         if message:
@@ -197,10 +208,48 @@ class ChatbotDiscussChannel(models.Model):
                     )
 
                     if not message_script and tools.html2plaintext(mail_message_id.body) == 'Confirm':
-                        helpdesk_order = self.env['helpdesk.order'].sudo().search([('partner_id','=',partner_id.id),('state','not in',['confirm','cancel'])])
+                        helpdesk_order = self.env['helpdesk.ticket'].sudo().search(
+                            [('partner_id', '=', partner_id.id)]).filtered(lambda x: x.stage_id.name == "New")
                         helpdesk_order.action_confirm()
+
+                        whatsapp_composer = self.env['whatsapp.composer'].with_user(
+                            user_partner.id).with_context(
+                            {
+                                "active_id": helpdesk_order.id,
+                                "is_chatbot": True,
+                                "wa_chatbot_id": self.wa_chatbot_id.id,
+                            }
+                        ).create(
+                            {
+                                'phone': helpdesk_order.partner_id.mobile,
+                                'wa_template_id': self.env.company.helpdesk_template_id.id,
+                                'res_model': helpdesk_order._name,
+                            }
+                        )
+                        whatsapp_composer._send_whatsapp_template()
+
+                    elif not message_script and tools.html2plaintext(mail_message_id.body) == 'Confirmar​':
+                        helpdesk_order = self.env['helpdesk.ticket'].sudo().search(
+                            [('partner_id', '=', partner_id.id)]).filtered(lambda x: x.stage_id.name == "New")
+                        helpdesk_order.action_confirm()
+                        whatsapp_composer = self.env['whatsapp.composer'].with_user(
+                            user_partner.id).with_context(
+                            {
+                                "active_id": helpdesk_order.id,
+                                "is_chatbot": True,
+                                "wa_chatbot_id": self.wa_chatbot_id.id,
+                            }
+                        ).create(
+                            {
+                                'phone': helpdesk_order.partner_id.mobile,
+                                'wa_template_id': self.env.company.helpdesk_template_id.id,
+                                'res_model': helpdesk_order._name,
+                            }
+                        )
+                        whatsapp_composer._send_whatsapp_template()
                     if not message_script and tools.html2plaintext(mail_message_id.body) == 'Cancel':
-                        helpdesk_order = self.env['helpdesk.order'].sudo().search([('partner_id','=',partner_id.id),('state','not in',['confirm','cancel'])])
+                        helpdesk_order = self.env['helpdesk.ticket'].sudo().search(
+                            [('partner_id', '=', partner_id.id)]).filtered(lambda x: x.stage_id.name == "New")
                         helpdesk_order.action_cancel()
                     # if not message_script and current__chat_seq_script.is_chatbot_ended:
                     #    self.is_chatbot_ended = True
@@ -216,19 +265,18 @@ class ChatbotDiscussChannel(models.Model):
                                 chatbot_script_lines = message_script
                         else:
                             chatbot_script_lines = message_script
-                    elif  mail_message_id and not message_script and current__chat_seq_script and current__chat_seq_script.get_image_script:
+                    elif mail_message_id and not message_script and current__chat_seq_script and current__chat_seq_script.get_image_script:
                         if mail_message_id.attachment_ids:
                             for attachment in mail_message_id.attachment_ids:
-                                helpdesk_order = self.env['helpdesk.order'].sudo().search([('partner_id','=',partner_id.id),('state','not in',['confirm','cancel'])])
+                                helpdesk_order = self.env['helpdesk.ticket'].sudo().search(
+                                    [('partner_id', '=', partner_id.id)]).filtered(lambda x: x.stage_id.name == "New")
                                 helpdesk_order.sudo().write({
-                                    'attachment_ids':  [(4, attachment.id)],
-                                })
-                                mail_message_id.update({
-                                    'body': 'Image Received'
+                                    'attachment_ids': [(4, attachment.id)],
                                 })
 
                                 chatbot_script_lines = self.wa_chatbot_id.mapped('step_type_ids').filtered(
-                                    lambda l: l.sequence == current__chat_seq_script.sequence + current__chat_seq_script.next_sq_number)
+                                    lambda
+                                        l: l.sequence == current__chat_seq_script.sequence + current__chat_seq_script.next_sq_number)
                         else:
                             chatbot_script_lines = current__chat_seq_script
 
@@ -241,7 +289,7 @@ class ChatbotDiscussChannel(models.Model):
                                     'parent_message_id').wa_template_id and l.sequence == self.script_sequence)
                                 if not current__chat_seq_script:
                                     temp_script = chatbot.step_type_ids.filtered(lambda
-                                                                                      l: l.action_id.dynamic_send_template_id == self._context.get(
+                                                                                     l: l.action_id.dynamic_send_template_id == self._context.get(
                                         'parent_message_id').wa_template_id)
                                     channel_script = chatbot.step_type_ids.filtered(
                                         lambda x: x.sequence == self.script_sequence).parent_id
@@ -251,7 +299,8 @@ class ChatbotDiscussChannel(models.Model):
                                 chatbot_script_lines = chatbot.step_type_ids.filtered(
                                     lambda l: l.sequence == next_script)
                             else:
-                                chatbot_script_lines = chatbot.step_type_ids.filtered(lambda l: l.sequence == current__chat_seq_script.sequence + current__chat_seq_script.next_sq_number)
+                                chatbot_script_lines = chatbot.step_type_ids.filtered(lambda
+                                                                                          l: l.sequence == current__chat_seq_script.sequence + current__chat_seq_script.next_sq_number)
                         else:
                             chatbot_script_lines = current__chat_seq_script
                     else:
@@ -322,7 +371,8 @@ class ChatbotDiscussChannel(models.Model):
                                         }
                                     )
                                 )
-                                new_message = whatsapp_composer.with_context({'stop_recur': True})._send_whatsapp_template()
+                                new_message = whatsapp_composer.with_context(
+                                    {'stop_recur': True})._send_whatsapp_template()
 
 
                         elif chat.step_call_type == "message":
@@ -333,7 +383,6 @@ class ChatbotDiscussChannel(models.Model):
                         elif chat.step_call_type == "action":
                             # booking_id = chatbot.booking_ids.filtered(lambda
                             #                                                                   x: x.appointment_booker_id.id == partner_id.id and x.whatsapp_booking_state == 'draft')
-
 
                             if chat.step_call_type == "action" and (
                                     chat.action_id and chat.action_id.is_custom_action) or (
@@ -362,18 +411,20 @@ class ChatbotDiscussChannel(models.Model):
                                             }
                                         )
                                     )
-                                    new_message = whatsapp_composer.with_context({'stop_recur': True})._send_whatsapp_template()
+                                    new_message = whatsapp_composer.with_context(
+                                        {'stop_recur': True})._send_whatsapp_template()
 
 
 
-                                elif not mail_message_id.booking_id or self._context.get('parent_message_id').booking_id:
+                                elif not mail_message_id.booking_id or self._context.get(
+                                        'parent_message_id').booking_id:
                                     if chat.action_id.dynamic_action_selection not in ['reschedule', 'cancel']:
                                         if not dummy_booking_id:
                                             booking_id |= self.env['helpdesk.order'].sudo().create({
                                                 'partner_id': partner_id.id,
                                                 'user_id': fields.first(wa_account_id.notify_user_ids).id,
                                             })
-                                            mail_message_id.sudo().write({'booking_id':booking_id.id})
+                                            mail_message_id.sudo().write({'booking_id': booking_id.id})
 
                                         else:
                                             mail_message_id.sudo().write({'booking_id': dummy_booking_id.id})
@@ -435,14 +486,14 @@ class ChatbotDiscussChannel(models.Model):
                                                 self._context.get('parent_message_id').booking_id.action_rescheduled()
 
                                 if chat.action_id.dynamic_working_selection == 'send':
-                                    if not booking_id and self._context.get('parent_message_id').booking_id :
+                                    if not booking_id and self._context.get('parent_message_id').booking_id:
                                         booking_id = self._context.get('parent_message_id').booking_id
-                                            # message_values.update({
-                                            #     "body": tools.html2plaintext(
-                                            #         template.body_html)
-                                            # })
-                                            # self._send_wa_template(wa_account_id, channel, partner_id, template,
-                                            #                        message_values, values[0], chat)
+                                        # message_values.update({
+                                        #     "body": tools.html2plaintext(
+                                        #         template.body_html)
+                                        # })
+                                        # self._send_wa_template(wa_account_id, channel, partner_id, template,
+                                        #                        message_values, values[0], chat)
                                     else:
                                         template = self._update_dynamic_template_value(chat, dummy_booking_id)
                                         if template and template.body and template.body != "":
@@ -466,7 +517,6 @@ class ChatbotDiscussChannel(models.Model):
                                             )
                                             whatsapp_composer.with_context(
                                                 {'stop_recur': True})._send_whatsapp_template()
-
 
                                 if chat.action_id.dynamic_working_selection == 'action':
                                     if chat.receive_action_id.dynamic_selection == 'reschedule':
@@ -768,101 +818,6 @@ class ChatbotDiscussChannel(models.Model):
                                             message_type="whatsapp_message",
                                         )
 
-
-
-                            # if (
-                            #         chat.action_id.binding_model_id.model
-                            #         == "discuss.channel"
-                            # ):
-                            #     self.is_chatbot_ended = True
-                            #     available_operator = False
-                            #     active_operator = chatbot.mapped(
-                            #         "user_ids"
-                            #     ).filtered(lambda user: user.im_status == "online")
-                            #     if active_operator:
-                            #         wa_chatbot_channels = (
-                            #             chatbot.mapped(
-                            #                 "channel_ids"
-                            #             )
-                            #         )
-                            #         for wa_channel in wa_chatbot_channels:
-                            #             operators = active_operator.filtered(
-                            #                 lambda av_user: av_user.partner_id
-                            #                                 not in wa_channel.channel_member_ids.partner_id
-                            #             )
-                            #             if operators:
-                            #                 for operator in operators:
-                            #                     available_operator = operator.partner_id
-                            #             else:
-                            #                 available_operator = random.choice(active_operator).partner_id
-                            #         if available_operator:
-                            #             added_operator = (
-                            #                 self.channel_partner_ids.filtered(
-                            #                     lambda x: x.id == available_operator.id
-                            #                 )
-                            #             )
-                            #             if added_operator:
-                            #                 self.write(
-                            #                     {
-                            #                         "is_chatbot_ended": True,
-                            #                         "wa_chatbot_id": False,
-                            #                     }
-                            #                 )
-                            #             else:
-                            #                 self.write(
-                            #                     {
-                            #                         "channel_partner_ids": [
-                            #                             (4, available_operator.id)
-                            #                         ],
-                            #                         "is_chatbot_ended": True,
-                            #                         "wa_chatbot_id": False,
-                            #                     }
-                            #                 )
-                            #             mail_channel_partner = (
-                            #                 self.env["discuss.channel.member"]
-                            #                 .sudo()
-                            #                 .search(
-                            #                     [
-                            #                         ("channel_id", "=", self.id),
-                            #                         (
-                            #                             "partner_id",
-                            #                             "=",
-                            #                             available_operator.id,
-                            #                         ),
-                            #                     ]
-                            #                 )
-                            #             )
-                            #             mail_channel_partner.write({"is_pinned": True})
-                            #             # wait_message = "We are connecting you with one of our experts. Please wait a moment."
-                            #             wait_message = chat
-                            #             self.with_context({'stop_recur': True}).with_user(user_partner.id).message_post(
-                            #                 body=wait_message,
-                            #                 message_type="whatsapp_message",
-                            #             )
-                            #             user_message = (
-                            #                     "You are now chatting with "
-                            #                     + available_operator.name
-                            #             )
-                            #             self.with_context({'stop_recur': True}).with_user(user_partner.id).message_post(
-                            #                 body=user_message,
-                            #                 message_type="whatsapp_message",
-                            #             )
-                            #     else:
-                            #         no_user_message = "Apologies, but there are currently no active operators available."
-                            #         self.with_context({'stop_recur': True}).with_user(user_partner.id).message_post(
-                            #             body=no_user_message,
-                            #             message_type="whatsapp_message",
-                            #         )
-                            #         user_message = (
-                            #             "We will connect you with one shortly."
-                            #         )
-                            #         self.with_context({'stop_recur': True}).with_user(user_partner.id).message_post(
-                            #             body=user_message,
-                            #             message_type="whatsapp_message",
-                            #         )
-                            # self.sudo().write({
-                            #     'child_wa_chatbot': False
-                            # })
         return res
 
 
