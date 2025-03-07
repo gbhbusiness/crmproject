@@ -160,8 +160,9 @@ class WhatsappAccountInherit(models.Model):
 
                                     if not helpdesk_order:
                                         helpdesk_ticket = helpdesk_order.sudo().create({
-                                            'name': parent.name,
-                                            'partner_id': parent.id,
+                                            "name": parent.name + " WA ChatBot Ticket ",
+                                            "partner_id": parent.id,
+                                            "partner_phone": parent.mobile,
                                             'team_id': self.env.company.team_id.id
                                         })
                                         helpdesk_ticket.response_data = answer_list
