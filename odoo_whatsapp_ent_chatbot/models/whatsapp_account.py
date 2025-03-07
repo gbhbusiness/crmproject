@@ -1,3 +1,5 @@
+from mpmath import limit
+
 from odoo import fields, models
 import json
 
@@ -121,7 +123,7 @@ class WhatsappAccountInherit(models.Model):
                             vals_list = self.filter_json_nfm(json_nfm)
                             contact_no = sender_mobile.join("+") + sender_mobile
 
-                            parent = self.env['res.partner'].sudo().search([('mobile', '=', contact_no)])
+                            parent = self.env['res.partner'].sudo().search([('mobile', 'ilike', contact_no)],limit=1)
                             helpdesk_order = self.env['helpdesk.ticket'].sudo().search(
                                 [('partner_id', '=', parent.id)]).filtered(lambda x: x.stage_id.name == "New")
 
