@@ -1,6 +1,6 @@
 {
     "name": "Whatsapp Extended  | Odoo Meta WhatsApp Graph API | Odoo V17 Enterprise Edition",
-    "version": "17.3",
+    "version": "17.4",
     "category": "Discuss",
     "summary": "Odoo Whatsapp Extended module is extended version of whatsapp enterprise",
     "description": """
@@ -20,7 +20,7 @@
         "views/interactive_product_list_views.xml",
         "views/whatsapp_interactive_template_views.xml",
         "views/whatsapp_template_inherit_views.xml",
-        # "views/res_partner_inherit_views.xml",
+        "views/res_partner_inherit_views.xml",
         "views/ir_actions.xml",
         "views/whatsapp_account_views.xml",
     ],
