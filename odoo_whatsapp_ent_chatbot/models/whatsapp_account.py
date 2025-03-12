@@ -125,9 +125,9 @@ class WhatsappAccountInherit(models.Model):
                             json_nfm = json.loads(nfm_replay)
                             vals_list = self.filter_json_nfm(json_nfm)
                             contact_no = sender_mobile.join("+") + sender_mobile
-
+                            _logger.info(contact_no)
                             partner = self.env['res.partner'].sudo().search([('mobile', 'ilike', contact_no)],limit=1)
-                            _logger.info("Partner ID", partner)
+                            _logger.info(partner)
                             helpdesk_order = self.env['helpdesk.ticket'].sudo().search(
                                 [('partner_id', '=', partner.id)]).filtered(lambda x: x.stage_id.name == "New")
 
