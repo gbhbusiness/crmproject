@@ -127,7 +127,7 @@ class WhatsappAccountInherit(models.Model):
                             contact_no = sender_mobile.join("+") + sender_mobile
 
                             partner = self.env['res.partner'].sudo().search([('mobile', 'ilike', contact_no)],limit=1)
-                            _logger.info("Partner ID" + partner)
+                            _logger.info("Partner ID", partner)
                             helpdesk_order = self.env['helpdesk.ticket'].sudo().search(
                                 [('partner_id', '=', partner.id)]).filtered(lambda x: x.stage_id.name == "New")
 
