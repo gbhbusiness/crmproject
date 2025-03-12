@@ -125,11 +125,18 @@ class WhatsappAccountInherit(models.Model):
                             json_nfm = json.loads(nfm_replay)
                             vals_list = self.filter_json_nfm(json_nfm)
                             contact_no = sender_mobile.join("+") + sender_mobile
+                            convert_number = f"+{sender_mobile[:2]} {sender_mobile[2:7]} {sender_mobile[7:]}"
                             _logger.info(contact_no)
-                            partner = self.env['res.partner'].sudo().search([('mobile', 'ilike', contact_no)],limit=1)
+                            partner = self.env['res.partner'].sudo().search([('mobile', 'ilike', convert_number )],limit=1)
+                            partners = self.env['res.partner'].sudo().search([('mobile', 'ilike', contact_no )],limit=1)
                             _logger.info(partner)
-                            helpdesk_order = self.env['helpdesk.ticket'].sudo().search(
-                                [('partner_id', '=', partner.id)]).filtered(lambda x: x.stage_id.name == "New")
+
+                            if partner:
+                                helpdesk_order = self.env['helpdesk.ticket'].sudo().search(
+                                    [('partner_id', '=', partner.id)]).filtered(lambda x: x.stage_id.name == "New")
+                            else:
+                                helpdesk_order = self.env['helpdesk.ticket'].sudo().search(
+                                    [('partner_id', '=', partners.id)]).filtered(lambda x: x.stage_id.name == "New")
 
                             if json_nfm.get("flow_token", False) and json_nfm.get("flow_token") != "unused":
                                 flow_id = json_nfm.get("flow_token")
@@ -165,12 +172,21 @@ class WhatsappAccountInherit(models.Model):
                                             })
 
                                     if not helpdesk_order:
-                                        helpdesk_ticket = helpdesk_order.sudo().create({
-                                            "name":  " WA ChatBot Ticket ",
-                                            "partner_id": partner.id,
-                                            "partner_phone": partner.mobile,
-                                            'team_id': self.env.company.team_id.id
-                                        })
+                                        if partners:
+                                            helpdesk_ticket = helpdesk_order.sudo().create({
+                                                "name":  partners.name +" ChatBot Ticket ",
+                                                "partner_id": partners.id,
+                                                "partner_phone": partners.mobile,
+                                                'team_id': self.env.company.team_id.id
+                                            })
+                                        else:
+                                            helpdesk_ticket = helpdesk_order.sudo().create({
+                                                "name": partner.name +" ChatBot Ticket ",
+                                                "partner_id": partner.id,
+                                                "partner_phone": partner.mobile,
+                                                'team_id': self.env.company.team_id.id
+                                            })
+
                                         helpdesk_ticket.response_data = answer_list
                                         helpdesk_ticket.sudo().write(register_vals)
 
