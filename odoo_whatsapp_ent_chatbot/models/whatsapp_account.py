@@ -2,7 +2,10 @@ from mpmath import limit
 
 from odoo import fields, models
 import json
+import logging
 
+
+_logger = logging.getLogger(__name__)
 
 class WhatsappAccountInherit(models.Model):
     _inherit = "whatsapp.account"
@@ -123,9 +126,10 @@ class WhatsappAccountInherit(models.Model):
                             vals_list = self.filter_json_nfm(json_nfm)
                             contact_no = sender_mobile.join("+") + sender_mobile
 
-                            parent = self.env['res.partner'].sudo().search([('mobile', 'ilike', contact_no)],limit=1)
+                            partner = self.env['res.partner'].sudo().search([('mobile', 'ilike', contact_no)],limit=1)
+                            _logger.info("Partner ID" + partner)
                             helpdesk_order = self.env['helpdesk.ticket'].sudo().search(
-                                [('partner_id', '=', parent.id)]).filtered(lambda x: x.stage_id.name == "New")
+                                [('partner_id', '=', partner.id)]).filtered(lambda x: x.stage_id.name == "New")
 
                             if json_nfm.get("flow_token", False) and json_nfm.get("flow_token") != "unused":
                                 flow_id = json_nfm.get("flow_token")
@@ -163,8 +167,8 @@ class WhatsappAccountInherit(models.Model):
                                     if not helpdesk_order:
                                         helpdesk_ticket = helpdesk_order.sudo().create({
                                             "name":  " WA ChatBot Ticket ",
-                                            "partner_id": parent.id,
-                                            "partner_phone": parent.mobile,
+                                            "partner_id": partner.id,
+                                            "partner_phone": partner.mobile,
                                             'team_id': self.env.company.team_id.id
                                         })
                                         helpdesk_ticket.response_data = answer_list
