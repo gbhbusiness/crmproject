@@ -3,6 +3,7 @@ from mpmath import limit
 from odoo import fields, models
 import json
 import logging
+from odoo.addons.whatsapp.tools import phone_validation as wa_phone_validation
 
 
 _logger = logging.getLogger(__name__)
@@ -124,7 +125,15 @@ class WhatsappAccountInherit(models.Model):
                             nfm_replay = messages.get('interactive').get("nfm_reply").get("response_json")
                             json_nfm = json.loads(nfm_replay)
                             vals_list = self.filter_json_nfm(json_nfm)
-                            partner =self.env['res.partner'].sudo().search([('mobile', '!=', False)]).filtered(lambda x: (x.mobile and x.mobile.split('+')[1].replace(' ', '') == sender_mobile))
+                            base_number = sender_mobile if sender_mobile.startswith('+') else f'+{sender_mobile}'
+                            wa_number = base_number.lstrip('+')
+                            wa_formatted = wa_phone_validation.wa_phone_format(
+                                self.env.company,
+                                number=base_number,
+                                force_format="WHATSAPP",
+                                raise_exception=False,
+                            ) or wa_number
+                            partner = self.env['res.partner']._find_or_create_from_number(wa_formatted, sender_name)
                             _logger.info(partner)
 
                             if partner:
