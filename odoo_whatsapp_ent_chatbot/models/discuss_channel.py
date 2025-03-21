@@ -222,7 +222,7 @@ class ChatbotDiscussChannel(models.Model):
                         ).create(
                             {
                                 'phone': helpdesk_order.partner_id.mobile,
-                                'wa_template_id': self.env.company.helpdesk_template_id.id,
+                                'wa_template_id': self.env.company.helpdesk_template_id.id if self.env.company.helpdesk_template_id else False ,
                                 'res_model': helpdesk_order._name,
                             }
                         )
@@ -242,7 +242,26 @@ class ChatbotDiscussChannel(models.Model):
                         ).create(
                             {
                                 'phone': helpdesk_order.partner_id.mobile,
-                                'wa_template_id': self.env.company.helpdesk_template_id.id,
+                                'wa_template_id': self.env.company.spain_ticket_template.id if self.env.company.spain_ticket_template else False,
+                                'res_model': helpdesk_order._name,
+                            }
+                        )
+                        whatsapp_composer._send_whatsapp_template()
+                    elif not message_script and tools.html2plaintext(mail_message_id.body) == 'Confirmar':
+                        helpdesk_order = self.env['helpdesk.ticket'].sudo().search(
+                            [('partner_id', '=', partner_id.id)]).filtered(lambda x: x.stage_id.name == "New")
+                        helpdesk_order.action_confirm()
+                        whatsapp_composer = self.env['whatsapp.composer'].with_user(
+                            user_partner.id).with_context(
+                            {
+                                "active_id": helpdesk_order.id,
+                                "is_chatbot": True,
+                                "wa_chatbot_id": self.wa_chatbot_id.id,
+                            }
+                        ).create(
+                            {
+                                'phone': helpdesk_order.partner_id.mobile,
+                                'wa_template_id': self.env.company.spain_ticket_template.id if self.env.company.spain_ticket_template else False,
                                 'res_model': helpdesk_order._name,
                             }
                         )

@@ -5,6 +5,7 @@ class ResCompany(models.Model):
 
     team_id = fields.Many2one('helpdesk.team',string="Team")
     helpdesk_template_id = fields.Many2one(comodel_name="whatsapp.template",string=" Helpdesk Ticket Template")
+    spain_ticket_template = fields.Many2one(comodel_name="whatsapp.template",string="Spain Helpdesk Ticket Template")
 
 
 
@@ -13,3 +14,4 @@ class ResConfigSetting(models.TransientModel):
 
     team_id =  fields.Many2one(related='company_id.team_id',readonly=False)
     helpdesk_template_id = fields.Many2one(related = 'company_id.helpdesk_template_id',readonly=False)
+    spain_ticket_template = fields.Many2one(related = 'company_id.spain_ticket_template',readonly=False)

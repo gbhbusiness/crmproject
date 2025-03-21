@@ -29,7 +29,10 @@ class WhatsappAccountInherit(models.Model):
             sender_name = value.get("contacts", [{}])[0].get("profile", {}).get("name")
             sender_mobile = messages["from"]
             message_type = messages["type"]
+            phone_sanitized = '+' + sender_mobile
+
             if message_type == "location":
+
                 if "context" in messages:
                     parent_whatsapp_message = self.env["whatsapp.message"].sudo().search(
                         [("msg_uid", "=", messages["context"].get("id"))])
@@ -126,14 +129,14 @@ class WhatsappAccountInherit(models.Model):
                             json_nfm = json.loads(nfm_replay)
                             vals_list = self.filter_json_nfm(json_nfm)
                             base_number = sender_mobile if sender_mobile.startswith('+') else f'+{sender_mobile}'
-                            wa_number = base_number.lstrip('+')
-                            wa_formatted = wa_phone_validation.wa_phone_format(
-                                self.env.company,
-                                number=base_number,
-                                force_format="WHATSAPP",
-                                raise_exception=False,
-                            ) or wa_number
-                            partner = self.env['res.partner']._find_or_create_from_number(wa_formatted, sender_name)
+                            # wa_number = base_number.lstrip('+')
+                            # wa_formatted = wa_phone_validation.wa_phone_format(
+                            #     self.env.company,
+                            #     number=base_number,
+                            #     force_format="WHATSAPP",
+                            #     raise_exception=False,
+                            # ) or wa_number
+                            partner = self.env['res.partner'].search([('phone_sanitized','=',phone_sanitized)],limit=1)
                             _logger.info(partner)
 
                             if partner:

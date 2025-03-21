@@ -21,15 +21,12 @@
                         </div>
                     </block>
                     <block title="Whatsapp Template">
-                        <div class="row mt16 o_settings_container">
-                            <setting string="Helpdesk Whatsapp Template">
-                                <div class="content-group">
-                                    <div class="row mt16">
-                                        <field name="helpdesk_template_id"/>
-                                    </div>
-                                </div>
-                            </setting>
-                        </div>
+                        <setting string="Helpdesk Whatsapp Template">
+                            <field name="helpdesk_template_id"/>
+                        </setting>
+                        <setting string="Helpdesk Whatsapp Template Spain ">
+                            <field name="spain_ticket_template"/>
+                        </setting>
                     </block>
                 </app>
 
